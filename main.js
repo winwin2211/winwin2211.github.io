@@ -41,7 +41,7 @@
       const open = btn.getAttribute("aria-expanded") === "true";
       btn.setAttribute("aria-expanded", String(!open));
       job.classList.toggle("open", !open);
-      panel.hidden = open;
+      panel.setAttribute("aria-hidden", String(open));
     });
   });
 
@@ -78,6 +78,21 @@
     figures.forEach((f) => io.observe(f));
   } else {
     figures.forEach((f) => f.classList.add("in-view"));
+  }
+
+  /* Reveal-on-scroll for headings, timeline entries and stack rows */
+  const revealables = document.querySelectorAll(".section-head, .job, .stack-row");
+  if ("IntersectionObserver" in window) {
+    const ioR = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add("in-view");
+        ioR.unobserve(e.target);
+      }
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+    revealables.forEach((el) => ioR.observe(el));
+  } else {
+    revealables.forEach((el) => el.classList.add("in-view"));
   }
 
   /* Current section in the nav */

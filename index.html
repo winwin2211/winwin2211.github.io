@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,6 +42,7 @@
   </script>
 </head>
 <body>
+  <script>document.documentElement.classList.remove("no-js");</script>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="top">
@@ -66,7 +67,7 @@
       <canvas class="schematic" id="schematic" aria-hidden="true"></canvas>
       <div class="hero-copy">
         <p class="hello">Hi, I'm</p>
-        <h1 class="name">Trinh<br>Van Thang</h1>
+        <h1 class="name"><span class="line">Trinh</span><span class="line">Van Thang</span></h1>
         <p class="role">Backend &amp; DevOps engineer. I design, scale and run the distributed systems behind on-chain trading platforms, real-time analytics and e-commerce.</p>
         <p class="where">Hanoi, Vietnam.</p>
         <div class="hero-actions">
@@ -90,7 +91,7 @@
         <li class="figure" style="--pct: 100">
           <div class="figure-num mono"><span data-count="50" data-suffix="K">50K</span></div>
           <div class="figure-body">
-            <h3>concurrent users at 600 ms p90</h3>
+            <h3>Concurrent users at 600 ms p90</h3>
             <p>Took XBIT GMGN from 1K users at 1 s p90 to 50K at 600 ms. Fifty times the load, 40% lower latency, by removing database access bottlenecks, reworking the concurrency model and tuning IOPS and network alongside infrastructure scaling.</p>
             <div class="bar" aria-hidden="true"><span class="bar-before" style="--w: 2%"></span><span class="bar-after"></span></div>
             <p class="bar-legend mono" aria-hidden="true"><span>1K before</span><span>50K after</span></p>
@@ -99,14 +100,14 @@
         <li class="figure" style="--pct: 100">
           <div class="figure-num mono"><span data-count="100" data-suffix="K">100K</span></div>
           <div class="figure-body">
-            <h3>messages a second through the on-chain pipeline</h3>
+            <h3>Messages a second through the on-chain pipeline</h3>
             <p>Real-time ingestion and enrichment on NATS that indexes, analyzes and enriches blockchain data across Ethereum, Solana and Base. Long-running work moved onto Redis-backed asynq queues so API latency stays predictable under bursty on-chain activity.</p>
           </div>
         </li>
         <li class="figure" style="--pct: 60">
           <div class="figure-num mono"><span data-count="60" data-prefix="−" data-suffix="%">−60%</span></div>
           <div class="figure-body">
-            <h3>cloud spend across Hetzner, AWS and Azure</h3>
+            <h3>Cloud spend across Hetzner, AWS and Azure</h3>
             <p>Profiled real resource consumption and cut service footprints by half, then moved non-production environments off AWS and Azure onto Hetzner bare metal. Managed services stayed only where they earned their cost.</p>
             <div class="bar" aria-hidden="true"><span class="bar-before" style="--w: 100%"></span><span class="bar-after" style="--w: 40%"></span></div>
             <p class="bar-legend mono" aria-hidden="true"><span>before</span><span>after: 40% of the bill</span></p>
@@ -115,14 +116,14 @@
         <li class="figure" style="--pct: 100">
           <div class="figure-num mono"><span data-count="10" data-suffix="M">10M</span></div>
           <div class="figure-body">
-            <h3>monthly visits on a 5M-user storefront</h3>
+            <h3>Monthly visits on a 5M-user storefront</h3>
             <p>Backend APIs for TokyoLife's e-commerce platform on Node.js and NestJS with MySQL and MongoDB, Elasticsearch search over the catalog, and order processing over RabbitMQ and Kafka.</p>
           </div>
         </li>
         <li class="figure" style="--pct: 14">
           <div class="figure-num mono"><span data-count="2" data-suffix=" of 14">2 of 14</span></div>
           <div class="figure-body">
-            <h3>engineers owning all platform infrastructure</h3>
+            <h3>Engineers owning all platform infrastructure</h3>
             <p>One of two people running the infrastructure for two products and a fourteen-engineer backend team: self-managed K3s on bare metal next to managed EKS, every environment from Terraform and Ansible, GitOps delivery with ArgoCD and canary rollouts into live trading systems.</p>
           </div>
         </li>
@@ -147,6 +148,7 @@
             </button>
             <p class="job-summary">Two products: <strong>GMGN</strong>, a real-time on-chain analytics and trading platform for discovering early tokens and tracking smart money across Ethereum, Solana and Base. <strong>Perp</strong>, a perpetual futures DEX in the Hyperliquid category with on-chain leveraged trading.</p>
             <div class="job-detail" id="job-xbit">
+              <div class="job-detail-inner">
               <h4>Backend</h4>
               <ul>
                 <li>Scaled the platform from 1K CCU at 1 s p90 to 50K CCU at 600 ms p90 through load testing and removing bottlenecks in database access, the concurrency model and hot-path data structures.</li>
@@ -162,7 +164,7 @@
                 <li>Delivery end to end: GitLab CI and GitHub Actions into ArgoCD GitOps, Argo Rollouts for canary and blue-green releases with zero downtime.</li>
                 <li>Platform layer: Traefik/NGINX ingress, cert-manager, Cilium, External Secrets Operator with Azure Key Vault, EMQX/MQTT.</li>
                 <li>Monitoring, dashboards and alerting with Prometheus and Grafana.</li>
-              </ul>
+              </ul></div>
             </div>
           </div>
         </li>
@@ -176,14 +178,15 @@
               <span class="chev" aria-hidden="true"></span>
             </button>
             <p class="job-summary">Backend for <a href="https://tokyolife.vn/" rel="noopener" target="_blank">TokyoLife</a>, an e-commerce storefront with over 5M users and 10M monthly visits, plus the internal platforms behind the company's digital transformation.</p>
-            <div class="job-detail" id="job-forlife" hidden>
+            <div class="job-detail" id="job-forlife">
+              <div class="job-detail-inner">
               <ul>
                 <li>Built and operated the storefront APIs on Node.js/NestJS with MySQL as the transactional store and MongoDB alongside, designed for high availability and fault tolerance.</li>
                 <li>Storefront search on Elasticsearch, indexing the product catalog for fast, relevance-ranked queries.</li>
                 <li>Order and transaction processing over RabbitMQ and Kafka, and the same brokers for real-time third-party sync.</li>
                 <li>Internal platforms for storage, transport, KPI and invoicing on a microservices backend.</li>
                 <li>Test-driven development and refactoring for maintainability.</li>
-              </ul>
+              </ul></div>
             </div>
           </div>
         </li>
@@ -197,12 +200,13 @@
               <span class="chev" aria-hidden="true"></span>
             </button>
             <p class="job-summary">GameFi and NFT products: a launchpad, an esports tournament platform and an EVM-wide NFT indexer.</p>
-            <div class="job-detail" id="job-lucis" hidden>
+            <div class="job-detail" id="job-lucis">
+              <div class="job-detail-inner">
               <ul>
                 <li>Lucis Launchpad: backend and smart contracts behind NFT sale registration and allocation.</li>
                 <li>Lucis Arena: tournament services and data model with blockchain reward and funding flows next to traditional payments.</li>
                 <li>Lucis OpenSea: crawler and indexing microservices with NestJS and gRPC covering NFT data across EVM chains.</li>
-              </ul>
+              </ul></div>
             </div>
           </div>
         </li>
@@ -216,10 +220,11 @@
               <span class="chev" aria-hidden="true"></span>
             </button>
             <p class="job-summary">Government software systems.</p>
-            <div class="job-detail" id="job-bkav" hidden>
+            <div class="job-detail" id="job-bkav">
+              <div class="job-detail-inner">
               <ul>
                 <li>Contributed to database and system design for eGov products and built UI components for the web client.</li>
-              </ul>
+              </ul></div>
             </div>
           </div>
         </li>

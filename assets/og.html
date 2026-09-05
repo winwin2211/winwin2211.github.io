@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- Source for assets/og.png (1200×630). Render with a headless browser at that size. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #EDF1F4 ;
+    background-image:
+      linear-gradient(rgba(18,32,46,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18,32,46,.08) 1px, transparent 1px);
+    background-size: 48px 48px;
+    color: #12202E; font-family: "IBM Plex Sans", sans-serif;
+    position: relative;
+  }
+  .copy { position: absolute; left: 72px; top: 92px; width: 560px; }
+  .hello { font-family: "IBM Plex Mono", monospace; color: #55677A; font-size: 22px; margin: 0 0 14px; }
+  h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 112px; line-height: .9; letter-spacing: -.035em; margin: 0 0 30px; font-variation-settings: "opsz" 96; }
+  .role { font-size: 27px; line-height: 1.4; margin: 0; color: #12202E; }
+  .where { font-size: 22px; color: #55677A; margin: 18px 0 0; }
+  svg { position: absolute; right: 48px; top: 60px; }
+  .lbl { font-family: "IBM Plex Mono", monospace; font-size: 14px; fill: #55677A; font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <p class="hello">Hi, I'm</p>
+    <h1>Trinh<br>Van Thang</h1>
+    <p class="role">Backend &amp; DevOps engineer. Distributed systems for on-chain trading, real-time analytics and e-commerce.</p>
+    <p class="where">Hanoi, Vietnam. Five years in production.</p>
+  </div>
+
+  <svg width="500" height="520" viewBox="0 0 500 520" fill="none">
+    <g stroke="#12202E" stroke-opacity=".38" stroke-width="1.4">
+      <!-- sources → NATS -->
+      <path d="M40 90 C 90 90, 90 260, 140 260"/>
+      <path d="M40 260 C 90 260, 90 260, 140 260"/>
+      <path d="M40 430 C 90 430, 90 260, 140 260"/>
+      <!-- NATS → workers -->
+      <path d="M140 260 C 190 260, 190 120, 240 120"/>
+      <path d="M140 260 C 190 260, 190 260, 240 260"/>
+      <path d="M140 260 C 190 260, 190 400, 240 400"/>
+      <!-- workers → storage -->
+      <path d="M240 120 C 290 120, 290 70, 340 70"/>
+      <path d="M240 120 C 290 120, 290 320, 340 320"/>
+      <path d="M240 260 C 290 260, 290 195, 340 195"/>
+      <path d="M240 260 C 290 260, 290 450, 340 450"/>
+      <path d="M240 400 C 290 400, 290 70, 340 70"/>
+      <path d="M240 400 C 290 400, 290 320, 340 320"/>
+      <!-- storage → API -->
+      <path d="M340 70 C 390 70, 390 260, 440 260"/>
+      <path d="M340 195 C 390 195, 390 260, 440 260"/>
+      <path d="M340 320 C 390 320, 390 260, 440 260"/>
+      <path d="M340 450 C 390 450, 390 260, 440 260"/>
+    </g>
+    <!-- packets -->
+    <g fill="#E8891E">
+      <circle cx="68" cy="102" r="3.2"/><circle cx="110" cy="205" r="3.2"/><circle cx="95" cy="260" r="3.2"/>
+      <circle cx="75" cy="405" r="3.2"/><circle cx="118" cy="320" r="3.2"/>
+      <circle cx="175" cy="220" r="3.2"/><circle cx="210" cy="135" r="3.2"/><circle cx="190" cy="260" r="3.2"/><circle cx="215" cy="385" r="3.2"/>
+      <circle cx="265" cy="105" r="3.2"/><circle cx="300" cy="230" r="3.2"/><circle cx="280" cy="255" r="3.2"/>
+      <circle cx="315" cy="430" r="3.2"/><circle cx="270" cy="360" r="3.2"/><circle cx="305" cy="180" r="3.2"/>
+      <circle cx="370" cy="95" r="3.2"/><circle cx="405" cy="215" r="3.2"/><circle cx="385" cy="300" r="3.2"/><circle cx="420" cy="255" r="3.2"/>
+    </g>
+    <!-- nodes -->
+    <g stroke="#12202E" stroke-width="1.8" fill="#EDF1F4">
+      <circle cx="40" cy="90" r="8"/><circle cx="40" cy="260" r="8"/><circle cx="40" cy="430" r="8"/>
+      <rect x="130" y="228" width="20" height="64" rx="4"/>
+      <circle cx="240" cy="120" r="8"/><circle cx="240" cy="260" r="8"/><circle cx="240" cy="400" r="8"/>
+      <g id="db"><ellipse cx="340" cy="63" rx="9" ry="3.6"/><path d="M331 63v14M349 63v14"/><path d="M331 77a9 3.6 0 0 0 18 0"/></g>
+      <g transform="translate(0 125)"><ellipse cx="340" cy="63" rx="9" ry="3.6"/><path d="M331 63v14M349 63v14"/><path d="M331 77a9 3.6 0 0 0 18 0"/></g>
+      <g transform="translate(0 250)"><ellipse cx="340" cy="63" rx="9" ry="3.6"/><path d="M331 63v14M349 63v14"/><path d="M331 77a9 3.6 0 0 0 18 0"/></g>
+      <g transform="translate(0 380)"><ellipse cx="340" cy="63" rx="9" ry="3.6"/><path d="M331 63v14M349 63v14"/><path d="M331 77a9 3.6 0 0 0 18 0"/></g>
+      <rect x="430" y="228" width="20" height="64" rx="4"/>
+    </g>
+    <g stroke="#55677A" stroke-width="1.6"><path d="M136 246h8M136 260h8M136 274h8M436 246h8M436 260h8M436 274h8"/></g>
+    <g class="lbl">
+      <text x="140" y="212" text-anchor="middle">NATS</text>
+      <text x="440" y="212" text-anchor="middle">API</text>
+      <text x="240" y="145" text-anchor="middle">indexer</text>
+      <text x="240" y="285" text-anchor="middle">enricher</text>
+      <text x="240" y="425" text-anchor="middle">matcher</text>
+      <text x="340" y="105" text-anchor="middle">PostgreSQL</text>
+      <text x="340" y="230" text-anchor="middle">ClickHouse</text>
+      <text x="340" y="355" text-anchor="middle">ScyllaDB</text>
+      <text x="340" y="485" text-anchor="middle">OpenSearch</text>
+    </g>
+  </svg>
+</body>
+</html>

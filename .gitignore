@@ -1,0 +1,4 @@
+# Source CV files contain personal contact details; keep them out of the public repo.
+cv/
+.DS_Store
+.playwright-mcp/

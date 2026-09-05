@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trinh Van Thang — Backend & DevOps Engineer</title>
+  <meta name="description" content="Backend & DevOps engineer in Hanoi. Five years scaling distributed systems for on-chain trading, real-time analytics and e-commerce: Go, Node.js, Kubernetes, multi-cloud.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#EDF1F4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F1A26" media="(prefers-color-scheme: dark)">
+
+  <!-- Social preview. Replace SITE_URL after deploying. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Trinh Van Thang — Backend & DevOps Engineer">
+  <meta property="og:description" content="Scaling distributed systems for on-chain trading and real-time analytics. 50K concurrent users, 100K messages a second, 60% lower cloud spend.">
+  <meta property="og:url" content="SITE_URL/">
+  <meta property="og:image" content="SITE_URL/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Trinh Van Thang — Backend & DevOps Engineer">
+  <meta name="twitter:description" content="Scaling distributed systems for on-chain trading and real-time analytics.">
+  <meta name="twitter:image" content="SITE_URL/assets/og.png">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Trinh Van Thang",
+    "jobTitle": "Backend & DevOps Engineer",
+    "email": "mailto:winwinthangtrinh@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Hanoi", "addressCountry": "VN" },
+    "alumniOf": "Hanoi University of Science and Technology",
+    "sameAs": ["https://www.linkedin.com/in/thang-trinh-859058249/"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <a class="wordmark" href="#top" aria-label="Trinh Van Thang, home">TVT</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#production">Production</a>
+      <a href="#experience">Experience</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme" type="button" aria-label="Switch color theme" title="Switch theme">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M9 2.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/>
+      </svg>
+    </button>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <canvas class="schematic" id="schematic" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="hello">Hi, I'm</p>
+        <h1 class="name">Trinh<br>Van Thang</h1>
+        <p class="role">Backend &amp; DevOps engineer. I design, scale and run the distributed systems behind on-chain trading platforms, real-time analytics and e-commerce.</p>
+        <p class="where">Hanoi, Vietnam. Five years in production.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#contact">Get in touch</a>
+          <a class="btn" href="https://www.linkedin.com/in/thang-trinh-859058249/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+      <p class="hero-caption" aria-hidden="true">
+        <span class="mono">fig. 1</span> a simplified view of the ingestion path I run at XBIT: chain events → NATS → workers → storage → API
+      </p>
+    </section>
+
+    <!-- ============ PRODUCTION FIGURES ============ -->
+    <section class="section" id="production">
+      <div class="section-head">
+        <h2>What I've run in production</h2>
+        <p class="lede">Numbers from systems I built and operated, not benchmarks. Each row is a load test, a bill, or a traffic report I was on the hook for.</p>
+      </div>
+
+      <ol class="figures">
+        <li class="figure" style="--pct: 100">
+          <div class="figure-num mono"><span data-count="50" data-suffix="K">50K</span></div>
+          <div class="figure-body">
+            <h3>concurrent users at 600 ms p90</h3>
+            <p>Took XBIT GMGN from 1K users at 1 s p90 to 50K at 600 ms. Fifty times the load, 40% lower latency, by removing database access bottlenecks, reworking the concurrency model and tuning IOPS and network alongside infrastructure scaling.</p>
+            <div class="bar" aria-hidden="true"><span class="bar-before" style="--w: 2%"></span><span class="bar-after"></span></div>
+            <p class="bar-legend mono" aria-hidden="true"><span>1K before</span><span>50K after</span></p>
+          </div>
+        </li>
+        <li class="figure" style="--pct: 100">
+          <div class="figure-num mono"><span data-count="100" data-suffix="K">100K</span></div>
+          <div class="figure-body">
+            <h3>messages a second through the on-chain pipeline</h3>
+            <p>Real-time ingestion and enrichment on NATS that indexes, analyzes and enriches blockchain data across Ethereum, Solana and Base. Long-running work moved onto Redis-backed asynq queues so API latency stays predictable under bursty on-chain activity.</p>
+          </div>
+        </li>
+        <li class="figure" style="--pct: 60">
+          <div class="figure-num mono"><span data-count="60" data-prefix="−" data-suffix="%">−60%</span></div>
+          <div class="figure-body">
+            <h3>cloud spend across Hetzner, AWS and Azure</h3>
+            <p>Profiled real resource consumption and cut service footprints by half, then moved non-production environments off AWS and Azure onto Hetzner bare metal. Managed services stayed only where they earned their cost.</p>
+            <div class="bar" aria-hidden="true"><span class="bar-before" style="--w: 100%"></span><span class="bar-after" style="--w: 40%"></span></div>
+            <p class="bar-legend mono" aria-hidden="true"><span>before</span><span>after: 40% of the bill</span></p>
+          </div>
+        </li>
+        <li class="figure" style="--pct: 100">
+          <div class="figure-num mono"><span data-count="10" data-suffix="M">10M</span></div>
+          <div class="figure-body">
+            <h3>monthly visits on a 5M-user storefront</h3>
+            <p>Backend APIs for TokyoLife's e-commerce platform on Node.js and NestJS with MySQL and MongoDB, Elasticsearch search over the catalog, and order processing over RabbitMQ and Kafka.</p>
+          </div>
+        </li>
+        <li class="figure" style="--pct: 14">
+          <div class="figure-num mono"><span data-count="2" data-suffix=" of 14">2 of 14</span></div>
+          <div class="figure-body">
+            <h3>engineers owning all platform infrastructure</h3>
+            <p>One of two people running the infrastructure for two products and a fourteen-engineer backend team: self-managed K3s on bare metal next to managed EKS, every environment from Terraform and Ansible, GitOps delivery with ArgoCD and canary rollouts into live trading systems.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="section" id="experience">
+      <div class="section-head">
+        <h2>Experience</h2>
+        <p class="lede">Four companies in five years, each one a step further into the infrastructure. Open an entry for the detail.</p>
+      </div>
+
+      <ol class="timeline">
+        <li class="job open">
+          <div class="job-when mono">Jul 2024 – now</div>
+          <div class="job-main">
+            <button class="job-toggle" type="button" aria-expanded="true" aria-controls="job-xbit">
+              <span class="job-company">XBIT</span>
+              <span class="job-title">Backend &amp; DevOps Engineer</span>
+              <span class="chev" aria-hidden="true"></span>
+            </button>
+            <p class="job-summary">Two products: <strong>GMGN</strong>, a real-time on-chain analytics and trading platform for discovering early tokens and tracking smart money across Ethereum, Solana and Base. <strong>Perp</strong>, a perpetual futures DEX in the Hyperliquid category with on-chain leveraged trading.</p>
+            <div class="job-detail" id="job-xbit">
+              <h4>Backend</h4>
+              <ul>
+                <li>Scaled the platform from 1K CCU at 1 s p90 to 50K CCU at 600 ms p90 through load testing and removing bottlenecks in database access, the concurrency model and hot-path data structures.</li>
+                <li>Built the on-chain ingestion and enrichment pipeline on NATS, up to 100K messages a second.</li>
+                <li>Built the perpetual-futures backend: order and position lifecycle, margin and funding-rate settlement, liquidations, low-latency market data.</li>
+                <li>Designed OLTP layers on PostgreSQL, MongoDB, ScyllaDB and TiDB, OLAP pipelines on ClickHouse, and OpenSearch for token and entity search.</li>
+                <li>Reviewed code and set the refactoring, testing and engineering standards for the backend team.</li>
+              </ul>
+              <h4>DevOps and cloud</h4>
+              <ul>
+                <li>Designed and operated multi-cloud infrastructure across Hetzner, AWS and Azure, cutting spend by 60%.</li>
+                <li>Self-managed K3s on bare metal alongside managed clusters, all provisioned from Terraform/OpenTofu and Ansible, packaged with Helm and Kustomize.</li>
+                <li>Delivery end to end: GitLab CI and GitHub Actions into ArgoCD GitOps, Argo Rollouts for canary and blue-green releases with zero downtime.</li>
+                <li>Platform layer: Traefik/NGINX ingress, cert-manager, Cilium, External Secrets Operator with Azure Key Vault, EMQX/MQTT.</li>
+                <li>Monitoring, dashboards and alerting with Prometheus and Grafana.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="job">
+          <div class="job-when mono">Jan 2023 – Jun 2024</div>
+          <div class="job-main">
+            <button class="job-toggle" type="button" aria-expanded="false" aria-controls="job-forlife">
+              <span class="job-company">Forlife</span>
+              <span class="job-title">Software Engineer</span>
+              <span class="chev" aria-hidden="true"></span>
+            </button>
+            <p class="job-summary">Backend for <a href="https://tokyolife.vn/" rel="noopener" target="_blank">TokyoLife</a>, an e-commerce storefront with over 5M users and 10M monthly visits, plus the internal platforms behind the company's digital transformation.</p>
+            <div class="job-detail" id="job-forlife" hidden>
+              <ul>
+                <li>Built and operated the storefront APIs on Node.js/NestJS with MySQL as the transactional store and MongoDB alongside, designed for high availability and fault tolerance.</li>
+                <li>Storefront search on Elasticsearch, indexing the product catalog for fast, relevance-ranked queries.</li>
+                <li>Order and transaction processing over RabbitMQ and Kafka, and the same brokers for real-time third-party sync.</li>
+                <li>Internal platforms for storage, transport, KPI and invoicing on a microservices backend.</li>
+                <li>Test-driven development and refactoring for maintainability.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="job">
+          <div class="job-when mono">Jan 2022 – Jan 2023</div>
+          <div class="job-main">
+            <button class="job-toggle" type="button" aria-expanded="false" aria-controls="job-lucis">
+              <span class="job-company">Lucis Network</span>
+              <span class="job-title">Backend Developer</span>
+              <span class="chev" aria-hidden="true"></span>
+            </button>
+            <p class="job-summary">GameFi and NFT products: a launchpad, an esports tournament platform and an EVM-wide NFT indexer.</p>
+            <div class="job-detail" id="job-lucis" hidden>
+              <ul>
+                <li>Lucis Launchpad: backend and smart contracts behind NFT sale registration and allocation.</li>
+                <li>Lucis Arena: tournament services and data model with blockchain reward and funding flows next to traditional payments.</li>
+                <li>Lucis OpenSea: crawler and indexing microservices with NestJS and gRPC covering NFT data across EVM chains.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="job">
+          <div class="job-when mono">Jul 2021 – Dec 2021</div>
+          <div class="job-main">
+            <button class="job-toggle" type="button" aria-expanded="false" aria-controls="job-bkav">
+              <span class="job-company">BKAV</span>
+              <span class="job-title">Software Developer</span>
+              <span class="chev" aria-hidden="true"></span>
+            </button>
+            <p class="job-summary">Government software systems.</p>
+            <div class="job-detail" id="job-bkav" hidden>
+              <ul>
+                <li>Contributed to database and system design for eGov products and built UI components for the web client.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="job edu">
+          <div class="job-when mono">2017 – 2022</div>
+          <div class="job-main">
+            <p class="job-company">Hanoi University of Science and Technology</p>
+            <p class="job-summary">Computer Science. Provincial valedictorian in the 2017 national university exam.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ STACK ============ -->
+    <section class="section" id="stack">
+      <div class="section-head">
+        <h2>Stack</h2>
+        <p class="lede">What I reach for, grouped by where it sits in the system.</p>
+      </div>
+
+      <dl class="stack">
+        <div class="stack-row">
+          <dt>Languages and frameworks</dt>
+          <dd>Go, Gin · TypeScript, Node.js, NestJS · React, Next.js</dd>
+        </div>
+        <div class="stack-row">
+          <dt>Storage</dt>
+          <dd>PostgreSQL, MySQL, MongoDB · ScyllaDB, TiDB · ClickHouse · Elasticsearch, OpenSearch · Redis</dd>
+        </div>
+        <div class="stack-row">
+          <dt>Messaging</dt>
+          <dd>NATS · Apache Kafka · RabbitMQ · EMQX / MQTT · asynq</dd>
+        </div>
+        <div class="stack-row">
+          <dt>Cloud and Kubernetes</dt>
+          <dd>AWS, Azure, Hetzner · Kubernetes: K3s, EKS, AKS · Docker, Helm, Kustomize · Traefik, NGINX Ingress, cert-manager, Cilium</dd>
+        </div>
+        <div class="stack-row">
+          <dt>Infrastructure as code and delivery</dt>
+          <dd>Terraform / OpenTofu, Ansible · GitLab CI, GitHub Actions · ArgoCD, Argo Rollouts · External Secrets Operator, Azure Key Vault</dd>
+        </div>
+        <div class="stack-row">
+          <dt>Observability</dt>
+          <dd>Prometheus, Grafana</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section contact" id="contact">
+      <div class="section-head">
+        <h2>Let's talk</h2>
+        <p class="lede">Open to backend, platform and DevOps roles, and to conversations about scaling systems. Email is the fastest way to reach me.</p>
+      </div>
+      <ul class="contact-list">
+        <li><a class="contact-link" href="mailto:winwinthangtrinh@gmail.com">winwinthangtrinh@gmail.com</a></li>
+        <li><a class="contact-link" href="https://www.linkedin.com/in/thang-trinh-859058249/" rel="me noopener" target="_blank">linkedin.com/in/thang-trinh-859058249</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Trinh Van Thang, Hanoi. Hand-built static page, no tracking.</p>
+    <p class="mono foot-meta">Away from the keyboard: books, badminton, games, music.</p>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

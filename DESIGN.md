@@ -70,3 +70,22 @@ The fig. 1 caption used to be loose text floating over the drawing, which broke
 at those widths. It is now a framed panel: hairline border, rounded, translucent
 background, left aligned, capped at 30rem on wide screens and full width when
 the hero stacks.
+
+## Revision: real icons on the schematic, education split out
+
+The schematic's nodes were plain circles, cylinders and bars. Each node now
+carries a `kind` that picks a drawn icon: the Ethereum diamond, Solana's offset
+bars, Base's flat-sided circle, a pinned processor for each worker, a cylinder
+for the transactional stores, columnar bars for ClickHouse, a magnifier for
+OpenSearch, a slotted bar for the NATS bus, a gateway chevron for the API and a
+small crowd for the users.
+
+Two effects came with them. Every node sits in a pool of light, brighter for the
+two hubs, and when a packet reaches a node a ring rides out from it, so arrivals
+are visible rather than implied. Both use a radial gradient baked once into an
+offscreen canvas and stamped with `drawImage`, which costs far less than
+rebuilding gradients or using `shadowBlur` each frame.
+
+Education and the exam result left the work timeline for their own section
+between Experience and Stack, as two cards in the same glass language as the
+bento. The timeline is now four jobs and nothing else.

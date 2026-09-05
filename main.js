@@ -85,7 +85,7 @@
   }
 
   /* Reveal-on-scroll for headings, timeline entries and stack rows */
-  const revealables = document.querySelectorAll(".section-head, .about-grid, .job, .stack-row");
+  const revealables = document.querySelectorAll(".section-head, .about-grid, .creds, .job, .stack-row");
   if ("IntersectionObserver" in window) {
     const ioR = new IntersectionObserver((entries) => {
       for (const e of entries) {
@@ -131,14 +131,31 @@
     let raf = 0;
     const mouse = { x: -1e4, y: -1e4 };
 
-    /* --- graph definition: columns of nodes, fractional positions --- */
+    /* --- graph definition ---
+       Every node carries a `kind`, and the kind picks the icon drawn for it,
+       so a database looks like a database and a worker looks like a worker. */
     const columns = [
-      { key: "src",   nodes: ["Ethereum", "Solana", "Base"] },
-      { key: "bus",   nodes: ["NATS"] },
-      { key: "work",  nodes: ["indexer", "enricher", "matcher"] },
-      { key: "store", nodes: ["TiDB", "MongoDB", "ScyllaDB", "ClickHouse", "OpenSearch", "PostgreSQL"] },
-      { key: "api",   nodes: ["API"] },
-      { key: "users", nodes: ["50K users"] },
+      { key: "src", nodes: [
+        { label: "Ethereum", kind: "eth" },
+        { label: "Solana",   kind: "sol" },
+        { label: "Base",     kind: "base" },
+      ] },
+      { key: "bus", nodes: [{ label: "NATS", kind: "bus" }] },
+      { key: "work", nodes: [
+        { label: "indexer",  kind: "chip" },
+        { label: "enricher", kind: "chip" },
+        { label: "matcher",  kind: "chip" },
+      ] },
+      { key: "store", nodes: [
+        { label: "TiDB",       kind: "db" },
+        { label: "MongoDB",    kind: "db" },
+        { label: "ScyllaDB",   kind: "db" },
+        { label: "ClickHouse", kind: "columnar" },
+        { label: "OpenSearch", kind: "search" },
+        { label: "PostgreSQL", kind: "db" },
+      ] },
+      { key: "api",   nodes: [{ label: "API", kind: "api" }] },
+      { key: "users", nodes: [{ label: "50K users", kind: "users" }] },
     ];
     const links = [
       // src → bus
@@ -160,35 +177,34 @@
     const nodes = new Map();
     const edges = [];
     const packets = [];
-
     let vertical = false;
+    let scale = 1;
 
     function layout() {
       vertical = W < 1200;
+      scale = vertical ? 0.82 : 1;
       // Wide: the flow runs left to right on the right half of the hero.
+      // Narrow: it runs top to bottom across the full width.
       // The threshold matches the hero's stacking breakpoint in styles.css.
-      // Narrow: the flow runs top to bottom across the full width.
       const area = vertical
-        ? { x0: 24, x1: W - 24, y0: 18, y1: H - 34 }
+        ? { x0: 28, x1: W - 28, y0: 30, y1: H - 42 }
         : { x0: W * 0.46, x1: W * 0.905, y0: H * 0.12, y1: H * 0.86 };
 
       nodes.clear();
       const colCount = columns.length;
       columns.forEach((col, ci) => {
         const along = ci / (colCount - 1);
-        const n = col.nodes.length;
-        col.nodes.forEach((label, ni) => {
-          const f = n === 1 ? 0.5 : (ni + 0.5) / n;
-          const big = col.key === "bus" || col.key === "api";
+        const count = col.nodes.length;
+        col.nodes.forEach((def, ni) => {
+          const f = count === 1 ? 0.5 : (ni + 0.5) / count;
           const x = vertical ? area.x0 + (area.x1 - area.x0) * f
                              : area.x0 + (area.x1 - area.x0) * along;
           const y = vertical ? area.y0 + (area.y1 - area.y0) * along
                              : area.y0 + (area.y1 - area.y0) * f;
-          nodes.set(label, {
-            label, x, y, col: col.key,
-            w: big ? (vertical ? 44 : 14) : 10,
-            h: big ? (vertical ? 14 : 44) : 10,
-            glow: 0,
+          nodes.set(def.label, {
+            label: def.label, kind: def.kind, col: col.key, row: ni,
+            x, y, glow: 0, pulse: 0,
+            hub: col.key === "bus" || col.key === "api",
           });
         });
       });
@@ -208,7 +224,7 @@
             e,
             p: (k / count + Math.random() * 0.3) % 1,
             speed: 0.10 + Math.random() * 0.08, // fraction of edge per second
-            size: 1.6 + Math.random() * 1.2,
+            size: 1.9 + Math.random() * 1.1,
           });
         }
       });
@@ -223,6 +239,40 @@
       };
     }
 
+    /* --- glow, drawn as a cached sprite ---
+       A radial gradient rebuilt every frame is expensive; the same gradient
+       baked into a small canvas and stamped with drawImage is nearly free. */
+    const sprites = new Map();
+    function rgba(hex, a) {
+      const h = hex.replace("#", "");
+      const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+      const n = parseInt(full, 16);
+      return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+    }
+    function glowSprite(color) {
+      let s = sprites.get(color);
+      if (s) return s;
+      const size = 128;
+      s = document.createElement("canvas");
+      s.width = s.height = size;
+      const g = s.getContext("2d");
+      const grd = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      grd.addColorStop(0, rgba(color, 0.85));
+      grd.addColorStop(0.42, rgba(color, 0.22));
+      grd.addColorStop(1, rgba(color, 0));
+      g.fillStyle = grd;
+      g.fillRect(0, 0, size, size);
+      sprites.set(color, s);
+      return s;
+    }
+    function drawGlow(x, y, radius, color, alpha) {
+      if (alpha <= 0.015) return;
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, alpha);
+      ctx.drawImage(glowSprite(color), x - radius, y - radius, radius * 2, radius * 2);
+      ctx.restore();
+    }
+
     function resize() {
       const r = cv.getBoundingClientRect();
       dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -235,7 +285,7 @@
       if (reduceMotion.matches) drawStatic();
     }
 
-    /* cubic bezier between two nodes, horizontal tangents */
+    /* cubic bezier between two nodes, tangents following the flow direction */
     function curve(a, b) {
       if (vertical) {
         const dy = (b.y - a.y) * 0.5;
@@ -258,6 +308,7 @@
       ctx.globalAlpha = alpha;
       ctx.strokeStyle = colors.ink;
       ctx.lineWidth = 1;
+      ctx.lineCap = "round";
       if (progress < 1) {
         // reveal along the path using dash offset
         const L = e.len * 1.2;
@@ -271,99 +322,210 @@
       ctx.restore();
     }
 
-    function drawNode(n, alpha) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      const big = n.col === "bus" || n.col === "api";
-      // glow when the mouse is near
-      if (n.glow > 0.01) {
-        ctx.fillStyle = colors.hot;
-        ctx.globalAlpha = alpha * 0.18 * n.glow;
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 18 + 10 * n.glow, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = alpha;
-      }
-      ctx.fillStyle = colors.paper;
-      ctx.strokeStyle = n.glow > 0.5 ? colors.hot : colors.ink;
-      ctx.lineWidth = 1.25;
-      if (big) {
-        ctx.beginPath();
-        roundRect(ctx, n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 3);
-        ctx.fill(); ctx.stroke();
-        // ticks on the bus to suggest many subjects
-        ctx.strokeStyle = colors.inkSoft;
-        for (let k = -1; k <= 1; k++) {
-          ctx.beginPath();
-          if (vertical) { ctx.moveTo(n.x + k * 10, n.y - 3); ctx.lineTo(n.x + k * 10, n.y + 3); }
-          else { ctx.moveTo(n.x - 3, n.y + k * 10); ctx.lineTo(n.x + 3, n.y + k * 10); }
-          ctx.stroke();
-        }
-      } else if (n.col === "users") {
-        // a fan of small dots for users
-        ctx.fillStyle = colors.ink;
-        for (let k = 0; k < 7; k++) {
-          const ang = (vertical ? 0 : -Math.PI / 2) + (k / 6) * Math.PI;
-          const px = vertical ? n.x + Math.cos(ang) * 11 : n.x + Math.cos(ang) * 7;
-          const py = vertical ? n.y + Math.sin(ang) * 7 : n.y + Math.sin(ang) * 11;
-          ctx.beginPath(); ctx.arc(px, py, 1.6, 0, Math.PI * 2); ctx.fill();
-        }
-      } else if (n.col === "store") {
-        // a tiny cylinder
-        ctx.beginPath();
-        ctx.ellipse(n.x, n.y - 5, 6, 2.4, 0, 0, Math.PI * 2);
-        ctx.moveTo(n.x - 6, n.y - 5); ctx.lineTo(n.x - 6, n.y + 5);
-        ctx.moveTo(n.x + 6, n.y - 5); ctx.lineTo(n.x + 6, n.y + 5);
-        ctx.ellipse(n.x, n.y + 5, 6, 2.4, 0, 0, Math.PI, false);
-        ctx.fill(); ctx.stroke();
-      } else {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 5.5, 0, Math.PI * 2);
-        ctx.fill(); ctx.stroke();
-      }
-
-      // label
-      ctx.fillStyle = n.glow > 0.5 ? colors.ink : colors.inkSoft;
-      ctx.font = `500 11px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
-      ctx.textBaseline = "middle";
-      if (vertical) {
-        ctx.font = `500 10px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
-        if (n.col === "src") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y - 14); }
-        else if (big) { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + n.w / 2 + 8, n.y); }
-        else if (n.col === "users") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 20); }
-        else if (n.col === "store") {
-          const idx = columns.find((c) => c.key === "store").nodes.indexOf(n.label);
-          ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + (idx % 2 ? 28 : 16));
-        }
-        else { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 16); }
-      } else if (n.col === "src") { ctx.textAlign = "right"; ctx.fillText(n.label, n.x - 12, n.y); }
-      else if (n.col === "users") { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + 16, n.y); }
-      else if (big) { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y - n.h / 2 - 10); }
-      else { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 16); }
-      ctx.restore();
+    /* --- icons ---
+       Each one draws centred on the origin, using whatever fill and stroke
+       the caller has set. `s` scales the whole glyph. */
+    function roundRect(x, y, w, h, r) {
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
     }
 
-    function roundRect(c, x, y, w, h, r) {
-      c.moveTo(x + r, y);
-      c.arcTo(x + w, y, x + w, y + h, r);
-      c.arcTo(x + w, y + h, x, y + h, r);
-      c.arcTo(x, y + h, x, y, r);
-      c.arcTo(x, y, x + w, y, r);
-      c.closePath();
+    const ICONS = {
+      /* Ethereum: the stacked diamonds of the mark */
+      eth(s) {
+        const r = 11 * s;
+        ctx.beginPath();
+        ctx.moveTo(0, -r); ctx.lineTo(r * 0.62, r * 0.06);
+        ctx.lineTo(0, r * 0.46); ctx.lineTo(-r * 0.62, r * 0.06);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-r * 0.62, r * 0.28); ctx.lineTo(0, r); ctx.lineTo(r * 0.62, r * 0.28);
+        ctx.stroke();
+      },
+      /* Solana: three offset bars */
+      sol(s) {
+        const w = 9 * s, d = 2.4 * s;
+        ctx.lineWidth = 2.6 * s;
+        for (let i = 0; i < 3; i++) {
+          const y = (i - 1) * 5.2 * s;
+          const o = i === 1 ? -d : d;
+          ctx.beginPath();
+          ctx.moveTo(-w + o, y); ctx.lineTo(w + o, y);
+          ctx.stroke();
+        }
+      },
+      /* Base: a circle with its left edge cut flat */
+      base(s) {
+        ctx.beginPath();
+        ctx.arc(0, 0, 10 * s, -2.3, 2.3);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+      },
+      /* worker: a processor with pins */
+      chip(s) {
+        const a = 8.5 * s, pin = 3.4 * s;
+        ctx.beginPath(); roundRect(-a, -a, a * 2, a * 2, 3 * s);
+        ctx.fill(); ctx.stroke();
+        ctx.beginPath(); roundRect(-a * 0.4, -a * 0.4, a * 0.8, a * 0.8, 1.5 * s);
+        ctx.stroke();
+        ctx.beginPath();
+        for (let i = -1; i <= 1; i++) {
+          const o = i * a * 0.5;
+          ctx.moveTo(o, -a); ctx.lineTo(o, -a - pin);
+          ctx.moveTo(o, a);  ctx.lineTo(o, a + pin);
+          ctx.moveTo(-a, o); ctx.lineTo(-a - pin, o);
+          ctx.moveTo(a, o);  ctx.lineTo(a + pin, o);
+        }
+        ctx.stroke();
+      },
+      /* database: a cylinder */
+      db(s) {
+        const rx = 8.5 * s, ry = 3.1 * s, h = 11 * s;
+        ctx.beginPath(); ctx.rect(-rx, -h / 2, rx * 2, h); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, h / 2, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, -h / 2, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(-rx, -h / 2); ctx.lineTo(-rx, h / 2);
+        ctx.moveTo(rx, -h / 2);  ctx.lineTo(rx, h / 2);
+        ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, h / 2, rx, ry, 0, 0, Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, -h / 2, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.save(); ctx.globalAlpha *= 0.45;
+        ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI); ctx.stroke();
+        ctx.restore();
+      },
+      /* ClickHouse: columnar bars, one of them short */
+      columnar(s) {
+        const gap = 4.4 * s, h = 17 * s;
+        ctx.lineWidth = 2.6 * s;
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const x = (i - 1.5) * gap;
+          ctx.moveTo(x, i === 3 ? -h * 0.16 : -h / 2);
+          ctx.lineTo(x, h / 2);
+        }
+        ctx.stroke();
+      },
+      /* OpenSearch: a magnifier */
+      search(s) {
+        const r = 6.4 * s, cx = -1.6 * s;
+        ctx.beginPath(); ctx.arc(cx, cx, r, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = 2.2 * s;
+        ctx.moveTo(cx + r * 0.68, cx + r * 0.68); ctx.lineTo(7.6 * s, 7.6 * s);
+        ctx.stroke();
+      },
+      /* NATS: a bus bar with subject slots */
+      bus(s) {
+        const w = 15 * s, h = 46 * s;
+        ctx.beginPath(); roundRect(-w / 2, -h / 2, w, h, 4.5 * s);
+        ctx.fill(); ctx.stroke();
+        ctx.save(); ctx.globalAlpha *= 0.7;
+        ctx.beginPath();
+        for (let i = -1; i <= 1; i++) {
+          ctx.moveTo(-w * 0.2, i * h * 0.2); ctx.lineTo(w * 0.2, i * h * 0.2);
+        }
+        ctx.stroke(); ctx.restore();
+      },
+      /* API: a gateway, with a chevron pointing the way out */
+      api(s) {
+        const w = 15 * s, h = 46 * s;
+        ctx.beginPath(); roundRect(-w / 2, -h / 2, w, h, 4.5 * s);
+        ctx.fill(); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.15, -h * 0.09);
+        ctx.lineTo(w * 0.17, 0);
+        ctx.lineTo(-w * 0.15, h * 0.09);
+        ctx.stroke();
+      },
+      /* users: a small crowd */
+      users(s) {
+        [[-7.5, -2.5], [0, 1], [7.5, -2.5]].forEach(([hx, hy]) => {
+          ctx.beginPath();
+          ctx.arc(hx * s, (hy - 3.5) * s, 2.5 * s, 0, Math.PI * 2);
+          ctx.fill(); ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(hx * s, (hy + 4.2) * s, 4.4 * s, Math.PI * 1.16, Math.PI * 1.84);
+          ctx.stroke();
+        });
+      },
+    };
+
+    function drawNode(n, alpha) {
+      const hot = n.glow > 0.45;
+      const s = scale;
+
+      // hubs sit in a permanent pool of light; hover and arrivals add to it
+      const lift = Math.max(n.glow * 0.5, n.pulse * 0.6);
+      drawGlow(n.x, n.y, (n.hub ? 48 : 30) * s,
+               hot || n.pulse > 0.2 ? colors.hot : colors.signal,
+               ((n.hub ? 0.2 : 0.05) + lift) * alpha);
+
+      // a ring rides out from a node when a packet lands on it
+      if (n.pulse > 0.04) {
+        ctx.save();
+        ctx.globalAlpha = alpha * n.pulse * 0.5;
+        ctx.strokeStyle = colors.hot;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, (12 + (1 - n.pulse) * 18) * s, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(n.x, n.y);
+      if (n.hub && vertical) ctx.rotate(Math.PI / 2);
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.lineWidth = 1.4;
+      ctx.fillStyle = colors.paper;
+      ctx.strokeStyle = hot ? colors.hot : colors.ink;
+      (ICONS[n.kind] || ICONS.chip)(s);
+      ctx.restore();
+
+      drawLabel(n, alpha, hot);
+    }
+
+    function drawLabel(n, alpha, hot) {
+      const s = scale;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = hot ? colors.ink : colors.inkSoft;
+      ctx.font = `500 ${vertical ? 10 : 11}px "IBM Plex Mono", ui-monospace, Menlo, monospace`;
+      ctx.textBaseline = "middle";
+      if (vertical) {
+        if (n.col === "src") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y - 21 * s); }
+        else if (n.hub) { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + 16 * s, n.y - 16 * s); }
+        else if (n.col === "store") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + (n.row % 2 ? 34 : 22) * s); }
+        else { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 23 * s); }
+      } else if (n.col === "src") { ctx.textAlign = "right"; ctx.fillText(n.label, n.x - 19 * s, n.y); }
+      else if (n.col === "users") { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + 22 * s, n.y); }
+      else if (n.hub) { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y - 33 * s); }
+      else { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 23 * s); }
+      ctx.restore();
     }
 
     function drawPacket(pk, alpha) {
       const pt = pointOn(pk.e, pk.p);
+      drawGlow(pt.x, pt.y, 10, colors.hot, alpha * 0.55);
       ctx.save();
-      ctx.globalAlpha = alpha;
-      // short trail
-      const back = pointOn(pk.e, Math.max(0, pk.p - 0.06));
-      ctx.strokeStyle = colors.hot;
-      ctx.lineWidth = 1.2;
-      ctx.globalAlpha = alpha * 0.45;
-      ctx.beginPath(); ctx.moveTo(back.x, back.y); ctx.lineTo(pt.x, pt.y); ctx.stroke();
-      ctx.globalAlpha = alpha;
       ctx.fillStyle = colors.hot;
+      // a short tapering trail behind the head
+      for (let i = 3; i >= 1; i--) {
+        const t = pk.p - i * 0.022;
+        if (t < 0) continue;
+        const q = pointOn(pk.e, t);
+        ctx.globalAlpha = alpha * (0.32 - i * 0.07);
+        ctx.beginPath(); ctx.arc(q.x, q.y, pk.size * (1 - i * 0.18), 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = alpha;
       ctx.beginPath(); ctx.arc(pt.x, pt.y, pk.size, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
@@ -382,6 +544,8 @@
         const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
         const target = d < 60 ? 1 - d / 60 : 0;
         n.glow += (target - n.glow) * 0.15;
+        n.pulse *= 0.94;
+        if (n.pulse < 0.02) n.pulse = 0;
       });
 
       edges.forEach((e) => {
@@ -404,7 +568,7 @@
         packets.forEach((pk) => {
           const boost = (pk.e.a.glow > 0.4 || pk.e.b.glow > 0.4) ? 2.2 : 1;
           pk.p += pk.speed * boost * dt;
-          if (pk.p > 1) pk.p -= 1;
+          if (pk.p > 1) { pk.p -= 1; pk.e.b.pulse = 1; }
           const start = colIndex(pk.e.a) / (columns.length - 1) * 0.75;
           if (intro - start < 0.25) return;
           drawPacket(pk, flowAlpha);
@@ -455,6 +619,12 @@
     resize();
     start();
 
-    return { redraw() { colors = readColors(); if (reduceMotion.matches) drawStatic(); } };
+    return {
+      redraw() {
+        colors = readColors();
+        sprites.clear();
+        if (reduceMotion.matches) drawStatic();
+      },
+    };
   }
 })();

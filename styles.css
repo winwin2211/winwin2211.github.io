@@ -2,38 +2,7 @@
    Tokens
    ------------------------------------------------------------------ */
 :root {
-  --paper: #EDF1F4;
-  --paper-2: #E2E8EE;
-  --ink: #12202E;
-  --ink-soft: #55677A;
-  --rule: #C5CFD8;
-  --grid: rgba(18, 32, 46, 0.07);
-  --signal: #1E4FE8;
-  --signal-soft: rgba(30, 79, 232, 0.12);
-  --hot: #E8891E;
-  --hot-soft: rgba(232, 137, 30, 0.18);
-  --glass: rgba(255, 255, 255, 0.55);
-  --glass-strong: rgba(255, 255, 255, 0.78);
-  --shadow: 0 1px 2px rgba(18, 32, 46, 0.06), 0 16px 40px -20px rgba(18, 32, 46, 0.35);
-  --shadow-hover: 0 2px 4px rgba(18, 32, 46, 0.06), 0 28px 60px -24px rgba(30, 79, 232, 0.35);
-  --name-grad: linear-gradient(120deg, var(--ink) 30%, #2B4F86 100%);
-  --num-grad: linear-gradient(120deg, var(--signal), var(--hot));
-  --noise-alpha: 0.035;
-
-  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-
-  --measure: 66ch;
-  --gutter: clamp(1.25rem, 5vw, 4rem);
-  --section-gap: clamp(5rem, 12vw, 9rem);
-
-  color-scheme: light;
-}
-
-:root[data-theme="dark"] {
   --paper: #0F1A26;
-  --paper-2: #14223200;
   --ink: #E6ECF2;
   --ink-soft: #9AAABB;
   --rule: #26374A;
@@ -47,30 +16,19 @@
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -20px rgba(0, 0, 0, 0.7);
   --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 28px 60px -24px rgba(108, 140, 255, 0.45);
   --name-grad: linear-gradient(120deg, #F2F6FA 25%, #9DB6FF 100%);
+  --num-grad: linear-gradient(120deg, var(--signal), var(--hot));
   --noise-alpha: 0.06;
-  color-scheme: dark;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0F1A26;
-    --paper-2: #14223200;
-    --ink: #E6ECF2;
-    --ink-soft: #9AAABB;
-    --rule: #26374A;
-    --grid: rgba(230, 236, 242, 0.06);
-    --signal: #6C8CFF;
-    --signal-soft: rgba(108, 140, 255, 0.16);
-    --hot: #F2A44A;
-    --hot-soft: rgba(242, 164, 74, 0.2);
-    --glass: rgba(20, 34, 50, 0.55);
-    --glass-strong: rgba(20, 34, 50, 0.8);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -20px rgba(0, 0, 0, 0.7);
-    --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 28px 60px -24px rgba(108, 140, 255, 0.45);
-    --name-grad: linear-gradient(120deg, #F2F6FA 25%, #9DB6FF 100%);
-    --noise-alpha: 0.06;
-    color-scheme: dark;
-  }
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 66ch;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --section-gap: clamp(5rem, 12vw, 9rem);
+
+  /* the page is dark only: no light palette, no toggle */
+  color-scheme: dark;
 }
 
 /* ------------------------------------------------------------------
@@ -169,8 +127,6 @@ ul, ol { margin: 0; padding: 0; }
   .top::after { animation: progress linear both; animation-timeline: scroll(root); }
 }
 @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.theme svg { transition: transform 500ms cubic-bezier(.2,.7,.2,1); }
-.theme:hover svg { transform: rotate(180deg); }
 .wordmark { transition: background 200ms ease, color 200ms ease; }
 .wordmark:hover { background: var(--ink); color: var(--paper); }
 .nav a { position: relative; }
@@ -190,20 +146,12 @@ ul, ol { margin: 0; padding: 0; }
 .nav { display: flex; gap: 1.25rem; margin-left: auto; }
 .nav a { color: var(--ink-soft); text-decoration: none; font-size: 0.95rem; }
 .nav a:hover, .nav a[aria-current="true"] { color: var(--ink); text-decoration: underline; }
-.theme {
-  display: inline-grid; place-items: center;
-  width: 2.1rem; height: 2.1rem; border-radius: 50%;
-  border: 1px solid var(--rule); background: transparent; color: var(--ink);
-  cursor: pointer;
-}
-.theme:hover { border-color: var(--ink); }
 
 @media (max-width: 640px) {
   .top { gap: 0.75rem; }
   .nav { gap: 0.75rem; }
   .nav a { font-size: 0.875rem; }
   .nav a:nth-child(1), .nav a:nth-child(4) { display: none; }
-  .theme { flex: none; width: 2rem; height: 2rem; }
 }
 
 /* ------------------------------------------------------------------
@@ -339,18 +287,27 @@ ul, ol { margin: 0; padding: 0; }
 .btn { box-shadow: 0 0 0 0 transparent; transition: color 220ms ease, border-color 220ms ease, transform 160ms ease, box-shadow 300ms ease; }
 .btn:active { transform: translateY(0); }
 
+/* the caption is a framed note pinned to the drawing, never loose text on top of it */
 .hero-caption {
-  position: absolute; right: var(--gutter); bottom: 1.25rem; z-index: 1;
-  max-width: 36rem; text-align: right;
-  color: var(--ink-soft); font-size: 0.85rem; line-height: 1.4;
+  position: absolute; right: var(--gutter); bottom: 1.5rem; z-index: 1;
+  width: min(30rem, calc(100% - 2 * var(--gutter)));
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--rule); border-radius: 14px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  color: var(--ink-soft); font-size: 0.8rem; line-height: 1.5;
+  text-align: left; text-wrap: pretty;
 }
 .hero-caption .mono { color: var(--hot); margin-right: 0.4rem; }
 
-@media (max-width: 900px) {
+/* Below this width the name and the drawing would collide, so the hero stacks:
+   copy, then the drawing, then the caption. */
+@media (max-width: 1200px) {
   .hero { min-height: auto; padding-bottom: 1.5rem; }
   .hero-copy { order: 1; }
   .schematic { order: 2; position: static; height: 440px; margin-top: 2.5rem; }
-  .hero-caption { order: 3; position: static; text-align: left; margin-top: 0.75rem; max-width: 100%; }
+  .hero-caption { order: 3; position: static; width: 100%; margin-top: 1rem; }
 }
 
 /* ------------------------------------------------------------------

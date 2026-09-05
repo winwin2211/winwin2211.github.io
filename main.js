@@ -1,38 +1,14 @@
 /* Trịnh Văn Thắng — portfolio
-   Plain JS, no dependencies. Four small parts:
-   1. theme toggle          2. timeline expand/collapse
-   3. figures in view       4. the hero schematic (canvas)
+   Plain JS, no dependencies:
+   pointer spotlight and the Hanoi clock, then
+   1. timeline expand/collapse   2. figures and sections in view
+   3. the hero schematic (canvas)
+   The page is dark only, so there is no theme code.
 */
 (() => {
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-  /* ---------------------------------------------------------------
-     1. Theme
-     --------------------------------------------------------------- */
-  const root = document.documentElement;
-  const themeBtn = document.querySelector(".theme");
-  try {
-    const saved = localStorage.getItem("theme");
-    if (saved === "light" || saved === "dark") root.dataset.theme = saved;
-  } catch (_) { /* storage unavailable */ }
-
-  const currentTheme = () =>
-    root.dataset.theme ||
-    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-
-  themeBtn?.addEventListener("click", () => {
-    const next = currentTheme() === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try { localStorage.setItem("theme", next); } catch (_) {}
-    schematic?.refreshColors();
-  });
-  window.matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => schematic?.refreshColors());
-  // any change of data-theme (button, devtools, other scripts) recolors the drawing
-  new MutationObserver(() => schematic?.refreshColors())
-    .observe(root, { attributes: true, attributeFilter: ["data-theme"] });
 
   /* Pointer spotlight: two CSS vars, updated at most once per frame */
   if (window.matchMedia("(hover: hover)").matches && !reduceMotion.matches) {
@@ -60,7 +36,7 @@
   }
 
   /* ---------------------------------------------------------------
-     2. Timeline
+     1. Timeline
      --------------------------------------------------------------- */
   document.querySelectorAll(".job-toggle").forEach((btn) => {
     const job = btn.closest(".job");
@@ -74,7 +50,7 @@
   });
 
   /* ---------------------------------------------------------------
-     3. Figures: bars grow and numbers count when they scroll in
+     2. Figures: bars grow and numbers count when they scroll in
      --------------------------------------------------------------- */
   const figures = document.querySelectorAll(".figure");
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -141,10 +117,10 @@
   }
 
   /* ---------------------------------------------------------------
-     4. Schematic: chain events → NATS → workers → storage → API → users
+     3. Schematic: chain events → NATS → workers → storage → API → users
      --------------------------------------------------------------- */
   const canvas = document.getElementById("schematic");
-  const schematic = canvas ? buildSchematic(canvas) : null;
+  if (canvas) buildSchematic(canvas);
 
   function buildSchematic(cv) {
     const ctx = cv.getContext("2d");
@@ -188,8 +164,9 @@
     let vertical = false;
 
     function layout() {
-      vertical = W < 900;
+      vertical = W < 1200;
       // Wide: the flow runs left to right on the right half of the hero.
+      // The threshold matches the hero's stacking breakpoint in styles.css.
       // Narrow: the flow runs top to bottom across the full width.
       const area = vertical
         ? { x0: 24, x1: W - 24, y0: 18, y1: H - 34 }
@@ -478,8 +455,6 @@
     resize();
     start();
 
-    return {
-      refreshColors() { colors = readColors(); if (reduceMotion.matches) drawStatic(); },
-    };
+    return { redraw() { colors = readColors(); if (reduceMotion.matches) drawStatic(); } };
   }
 })();

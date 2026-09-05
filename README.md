@@ -5,8 +5,8 @@ browser or serve the folder with any static server.
 
 ```
 index.html      content and structure
-styles.css      design tokens, layout, dark mode
-main.js         theme toggle, timeline, figures, hero schematic (canvas)
+styles.css      design tokens, layout, responsive rules
+main.js         timeline, scroll reveals, hero schematic (canvas)
 assets/         favicon, portrait, social preview image and its source
 ```
 

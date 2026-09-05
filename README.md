@@ -7,7 +7,7 @@ browser or serve the folder with any static server.
 index.html      content and structure
 styles.css      design tokens, layout, dark mode
 main.js         theme toggle, timeline, figures, hero schematic (canvas)
-assets/         favicon, social preview image and its source
+assets/         favicon, portrait, social preview image and its source
 ```
 
 ## Edit content
@@ -15,6 +15,7 @@ assets/         favicon, social preview image and its source
 Everything visible is in `index.html`. The sections, in order:
 
 - Hero copy (name, role, location, buttons)
+- About — portrait (`assets/portrait.jpg`, cropped with CSS `object-position`) and three paragraphs
 - "What I've run in production" — the five figures
 - Experience timeline — one `<li class="job">` per company
 - Stack — one `<div class="stack-row">` per group

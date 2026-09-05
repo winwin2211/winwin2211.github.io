@@ -81,7 +81,7 @@
   }
 
   /* Reveal-on-scroll for headings, timeline entries and stack rows */
-  const revealables = document.querySelectorAll(".section-head, .job, .stack-row");
+  const revealables = document.querySelectorAll(".section-head, .about-grid, .job, .stack-row");
   if ("IntersectionObserver" in window) {
     const ioR = new IntersectionObserver((entries) => {
       for (const e of entries) {

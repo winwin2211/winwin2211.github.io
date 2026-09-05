@@ -157,7 +157,7 @@ ul, ol { margin: 0; padding: 0; }
   .top { gap: 0.75rem; }
   .nav { gap: 0.75rem; }
   .nav a { font-size: 0.875rem; }
-  .nav a:nth-child(3) { display: none; }
+  .nav a:nth-child(1), .nav a:nth-child(4) { display: none; }
   .theme { flex: none; width: 2rem; height: 2rem; }
 }
 
@@ -280,6 +280,7 @@ ul, ol { margin: 0; padding: 0; }
 .section {
   padding: 0 var(--gutter);
   margin-top: var(--section-gap);
+  scroll-margin-top: 4.5rem; /* keep anchored headings clear of the sticky header */
 }
 .section-head {
   position: relative;
@@ -320,6 +321,52 @@ ul, ol { margin: 0; padding: 0; }
   margin-bottom: 0.75rem;
 }
 .lede { color: var(--ink-soft); max-width: 58ch; text-wrap: pretty; }
+
+/* ------------------------------------------------------------------
+   About
+   ------------------------------------------------------------------ */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: 2rem 3.5rem;
+  align-items: start;
+  max-width: 60rem;
+}
+.about-text { max-width: 62ch; display: grid; gap: 1rem; }
+.about-text p { text-wrap: pretty; }
+
+/* the photo is mounted like a figure on the drawing: framed, register marks at the corners */
+.portrait {
+  position: relative; margin: 0;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1);
+}
+.about-grid.in-view .portrait { opacity: 1; transform: none; }
+.portrait img {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 78%;
+  border: 1.5px solid var(--ink);
+  filter: saturate(0.55) contrast(1.02);
+  transition: filter 500ms ease;
+}
+.portrait:hover img { filter: none; }
+.portrait::before, .portrait::after {
+  content: ""; position: absolute; width: 14px; height: 14px;
+  border: 1.5px solid var(--hot); pointer-events: none;
+}
+.portrait::before { left: -7px; top: -7px; border-right: 0; border-bottom: 0; }
+.portrait::after  { right: -7px; bottom: 32px; border-left: 0; border-top: 0; }
+.portrait figcaption {
+  margin-top: 0.6rem; color: var(--ink-soft); font-size: 0.85rem;
+}
+.portrait figcaption .mono { color: var(--hot); margin-right: 0.4rem; }
+.about-text { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease 150ms, transform 600ms cubic-bezier(.2,.7,.2,1) 150ms; }
+.about-grid.in-view .about-text { opacity: 1; transform: none; }
+
+@media (max-width: 720px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .portrait { max-width: 16rem; }
+}
 
 /* ------------------------------------------------------------------
    Production figures
@@ -553,10 +600,10 @@ p.job-company { margin: 0; }
   }
   .bar span { transform: scaleX(1); }
   .section-head::before, .job::before { transform: none; }
-  .section-head > *, .figure, .job-main, .job-when, .stack-row { opacity: 1; transform: none; }
+  .section-head > *, .figure, .job-main, .job-when, .stack-row, .portrait, .about-text { opacity: 1; transform: none; }
   .job.open::after { animation: none; }
 }
 
 /* no-JS fallback: nothing waits for an observer */
 .no-js .section-head::before, .no-js .job::before { transform: none; }
-.no-js .section-head > *, .no-js .figure, .no-js .job-main, .no-js .job-when, .no-js .stack-row { opacity: 1; transform: none; }
+.no-js .section-head > *, .no-js .figure, .no-js .job-main, .no-js .job-when, .no-js .stack-row, .no-js .portrait, .no-js .about-text { opacity: 1; transform: none; }

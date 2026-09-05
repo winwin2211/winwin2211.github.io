@@ -33,28 +33,39 @@ python3 -m http.server 8000
 
 ## Deploy to GitHub Pages (free)
 
-1. Create a new **public** repository on GitHub. Naming it
-   `<your-username>.github.io` gives you the root URL
-   `https://<your-username>.github.io/`; any other name gives
-   `https://<your-username>.github.io/<repo>/`.
-2. Push this folder:
+The git remote is already set to `git@github.com:winwin2211/winwin2211.github.io.git`
+and the absolute URLs in `index.html` point at `https://winwin2211.github.io`.
+
+1. Create a **public** repository named `winwin2211.github.io` at
+   <https://github.com/new>. Leave "Add a README" and every other initialising
+   option unchecked, so the repository starts empty.
+2. Push:
 
    ```
-   git remote add origin git@github.com:<your-username>/<repo>.git
    git push -u origin main
    ```
 
-3. In the repository: **Settings → Pages → Build and deployment →
-   Source: Deploy from a branch → Branch: `main`, folder `/ (root)` → Save.**
-   The site is live in about a minute.
-4. Replace `SITE_URL` in `index.html` (the `og:url`, `og:image` and
-   `twitter:image` tags) with the real URL, commit and push again. Social
-   networks read those tags to build the link preview.
+3. GitHub Pages turns itself on for a `<username>.github.io` repository. If the
+   site is not live after a minute, open **Settings - Pages** and set
+   **Source: Deploy from a branch**, **Branch: `main`**, folder **`/ (root)`**.
+4. The site is served at <https://winwin2211.github.io/>.
+
+`.nojekyll` is committed so GitHub serves the files as they are, without
+running Jekyll over them.
+
+### If you name the repository something else
+
+A repository named, say, `portfolio` is served from
+`https://winwin2211.github.io/portfolio/`. Every asset on the page uses a
+relative path, so the page still works, but the four absolute URLs in the
+`<head>` of `index.html` (`og:url`, `og:image`, `twitter:image` and the
+schema.org `image`) have to be updated to the new address, otherwise link
+previews on social networks break.
 
 ### Custom domain (optional)
 
 Add a `CNAME` file containing your domain, then point a `CNAME` DNS record
-at `<your-username>.github.io`. GitHub issues the TLS certificate.
+at `winwin2211.github.io`. GitHub issues the TLS certificate.
 
 ### Alternatives
 

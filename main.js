@@ -30,6 +30,34 @@
   });
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => schematic?.refreshColors());
+  // any change of data-theme (button, devtools, other scripts) recolors the drawing
+  new MutationObserver(() => schematic?.refreshColors())
+    .observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+  /* Pointer spotlight: two CSS vars, updated at most once per frame */
+  if (window.matchMedia("(hover: hover)").matches && !reduceMotion.matches) {
+    let px = 0, py = 0, queued = false;
+    window.addEventListener("pointermove", (e) => {
+      px = e.clientX; py = e.clientY;
+      document.body.classList.add("has-pointer");
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        document.body.style.setProperty("--mx", px + "px");
+        document.body.style.setProperty("--my", py + "px");
+        queued = false;
+      });
+    }, { passive: true });
+    window.addEventListener("pointerleave", () => document.body.classList.remove("has-pointer"));
+  }
+
+  /* Live Hanoi time in the status pill */
+  const clock = document.getElementById("hanoi-time");
+  if (clock) {
+    const fmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Ho_Chi_Minh" });
+    const tick = () => { clock.textContent = "Hanoi " + fmt.format(new Date()); };
+    tick(); setInterval(tick, 15000);
+  }
 
   /* ---------------------------------------------------------------
      2. Timeline

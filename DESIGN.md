@@ -41,3 +41,16 @@ Motion
 - One orchestrated moment: the diagram draws itself on load, then
   packets flow. Expand/collapse on timeline entries answers a click.
 - Everything else static. prefers-reduced-motion freezes the diagram.
+
+## Revision (same day): richer surfaces
+
+At the owner's request the page moved from flat rows to a layered look while
+keeping the schematic as the one memorable element:
+- Glass panels (translucent paper, hairline border, soft shadow) for the
+  production bento, the open timeline entry, stack chips and the contact panel.
+- Ambient light: three slow-drifting blurred orbs behind the hero, paper grain
+  over the whole page, and a pointer-following torch that lights the grid.
+- Status pill with a live Hanoi clock; a tech ticker between hero and About.
+- Gradient text for the name and the production numbers; gradient borders on
+  the open timeline card and the contact panel.
+All of it is disabled or frozen under prefers-reduced-motion.

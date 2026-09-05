@@ -45,6 +45,7 @@
 </head>
 <body>
   <script>document.documentElement.classList.remove("no-js");</script>
+  <div class="spotlight" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="top">
@@ -67,8 +68,10 @@
   <main id="main">
     <!-- ============ HERO ============ -->
     <section class="hero" id="top">
+      <div class="orbs" aria-hidden="true"><span class="orb orb-a"></span><span class="orb orb-b"></span><span class="orb orb-c"></span></div>
       <canvas class="schematic" id="schematic" aria-hidden="true"></canvas>
       <div class="hero-copy">
+        <p class="status"><span class="status-dot" aria-hidden="true"></span>Available for new roles<span class="status-sep" aria-hidden="true"></span><span class="mono" id="hanoi-time" title="Local time in Hanoi">Hanoi</span></p>
         <p class="hello">Hi, I'm</p>
         <h1 class="name"><span class="line"><span>Trịnh</span></span><span class="line"><span>Văn Thắng</span></span></h1>
         <p class="role">Backend &amp; DevOps engineer. I design, scale and run the distributed systems behind on-chain trading platforms, real-time analytics and e-commerce.</p>
@@ -82,6 +85,14 @@
         <span class="mono">fig. 1</span> a simplified view of the platform I run at XBIT: chain events → NATS → workers → storage → API. PostgreSQL sits behind the API alone, for users and money.
       </p>
     </section>
+
+    <!-- ============ TICKER ============ -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Go</span><span>Node.js</span><span>NestJS</span><span>Kubernetes</span><span>Terraform</span><span>ArgoCD</span><span>NATS</span><span>Kafka</span><span>PostgreSQL</span><span>ScyllaDB</span><span>TiDB</span><span>ClickHouse</span><span>MongoDB</span><span>OpenSearch</span><span>Redis</span><span>Hetzner</span><span>AWS</span><span>Azure</span><span>Prometheus</span><span>Grafana</span>
+        <span>Go</span><span>Node.js</span><span>NestJS</span><span>Kubernetes</span><span>Terraform</span><span>ArgoCD</span><span>NATS</span><span>Kafka</span><span>PostgreSQL</span><span>ScyllaDB</span><span>TiDB</span><span>ClickHouse</span><span>MongoDB</span><span>OpenSearch</span><span>Redis</span><span>Hetzner</span><span>AWS</span><span>Azure</span><span>Prometheus</span><span>Grafana</span>
+      </div>
+    </div>
 
     <!-- ============ ABOUT ============ -->
     <section class="section about" id="about">
@@ -108,7 +119,7 @@
       </div>
 
       <ol class="figures">
-        <li class="figure" style="--pct: 100">
+        <li class="figure figure-wide" style="--pct: 100">
           <div class="figure-num mono"><span data-count="50" data-suffix="K">50K</span></div>
           <div class="figure-body">
             <h3>Concurrent users at 600 ms p90</h3>
@@ -269,41 +280,46 @@
       <dl class="stack">
         <div class="stack-row">
           <dt>Languages and frameworks</dt>
-          <dd>Go, Gin · TypeScript, Node.js, NestJS · React, Next.js</dd>
+          <dd><span class="chip">Go</span><span class="chip">Gin</span><span class="chip">TypeScript</span><span class="chip">Node.js</span><span class="chip">NestJS</span><span class="chip">React</span><span class="chip">Next.js</span></dd>
         </div>
         <div class="stack-row">
           <dt>Storage</dt>
-          <dd>PostgreSQL, MySQL, MongoDB · ScyllaDB, TiDB · ClickHouse · Elasticsearch, OpenSearch · Redis</dd>
+          <dd><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">ScyllaDB</span><span class="chip">TiDB</span><span class="chip">ClickHouse</span><span class="chip">Elasticsearch</span><span class="chip">OpenSearch</span><span class="chip">Redis</span></dd>
         </div>
         <div class="stack-row">
           <dt>Messaging</dt>
-          <dd>NATS · Apache Kafka · RabbitMQ · EMQX / MQTT · asynq</dd>
+          <dd><span class="chip">NATS</span><span class="chip">Apache Kafka</span><span class="chip">RabbitMQ</span><span class="chip">EMQX / MQTT</span><span class="chip">asynq</span></dd>
         </div>
         <div class="stack-row">
           <dt>Cloud and Kubernetes</dt>
-          <dd>AWS, Azure, Hetzner · Kubernetes: K3s, EKS, AKS · Docker, Helm, Kustomize · Traefik, NGINX Ingress, cert-manager, Cilium</dd>
+          <dd><span class="chip">AWS</span><span class="chip">Azure</span><span class="chip">Hetzner</span><span class="chip">K3s</span><span class="chip">EKS</span><span class="chip">AKS</span><span class="chip">Docker</span><span class="chip">Helm</span><span class="chip">Kustomize</span><span class="chip">Traefik</span><span class="chip">NGINX Ingress</span><span class="chip">cert-manager</span><span class="chip">Cilium</span></dd>
         </div>
         <div class="stack-row">
           <dt>Infrastructure as code and delivery</dt>
-          <dd>Terraform / OpenTofu, Ansible · GitLab CI, GitHub Actions · ArgoCD, Argo Rollouts · External Secrets Operator, Azure Key Vault</dd>
+          <dd><span class="chip">Terraform / OpenTofu</span><span class="chip">Ansible</span><span class="chip">GitLab CI</span><span class="chip">GitHub Actions</span><span class="chip">ArgoCD</span><span class="chip">Argo Rollouts</span><span class="chip">External Secrets Operator</span><span class="chip">Azure Key Vault</span></dd>
         </div>
         <div class="stack-row">
           <dt>Observability</dt>
-          <dd>Prometheus, Grafana</dd>
+          <dd><span class="chip">Prometheus</span><span class="chip">Grafana</span></dd>
         </div>
       </dl>
     </section>
 
     <!-- ============ CONTACT ============ -->
     <section class="section contact" id="contact">
-      <div class="section-head">
+      <div class="contact-panel">
+        <div class="contact-glow" aria-hidden="true"></div>
         <h2>Let's talk</h2>
         <p class="lede">Open to backend, platform and DevOps roles, and to conversations about scaling systems. Email is the fastest way to reach me.</p>
+        <div class="contact-actions">
+          <a class="btn primary" href="mailto:winwinthangtrinh@gmail.com">Email me</a>
+          <a class="btn" href="https://www.linkedin.com/in/thang-trinh-859058249/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+        <ul class="contact-list">
+          <li><a class="contact-link" href="mailto:winwinthangtrinh@gmail.com">winwinthangtrinh@gmail.com</a></li>
+          <li><a class="contact-link" href="https://www.linkedin.com/in/thang-trinh-859058249/" rel="me noopener" target="_blank">linkedin.com/in/thang-trinh-859058249</a></li>
+        </ul>
       </div>
-      <ul class="contact-list">
-        <li><a class="contact-link" href="mailto:winwinthangtrinh@gmail.com">winwinthangtrinh@gmail.com</a></li>
-        <li><a class="contact-link" href="https://www.linkedin.com/in/thang-trinh-859058249/" rel="me noopener" target="_blank">linkedin.com/in/thang-trinh-859058249</a></li>
-      </ul>
     </section>
   </main>
 

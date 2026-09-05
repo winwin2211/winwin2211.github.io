@@ -586,21 +586,28 @@ ul, ol { margin: 0; padding: 0; }
 .job:last-child::before { bottom: auto; height: 2rem; }
 
 .job-when { color: var(--ink-soft); padding-top: 0.35rem; white-space: nowrap; }
+/* every entry is a glass card; the open one is picked out by a gradient edge */
 .job-main {
   min-width: 0;
-  padding: 1rem 1.25rem; margin: -1rem -1.25rem;
-  border-radius: 18px; border: 1px solid transparent;
-  transition: background 300ms ease, border-color 300ms ease, box-shadow 400ms ease;
+  padding: 1.1rem 1.35rem 1.25rem; margin: -1rem -1.25rem;
+  border-radius: 18px; border: 1px solid var(--rule);
+  background: var(--glass);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  transition: background 300ms ease, border-color 300ms ease, box-shadow 400ms ease, transform 300ms cubic-bezier(.2,.7,.2,1);
 }
-.job:not(.edu):hover .job-main { background: var(--glass); border-color: var(--rule); }
+.job:not(.open):not(.edu):hover .job-main {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--rule));
+  box-shadow: var(--shadow-hover);
+}
 .job.open .job-main {
   background:
     linear-gradient(var(--glass-strong), var(--glass-strong)) padding-box,
     linear-gradient(var(--paper), var(--paper)) padding-box,
     linear-gradient(135deg, var(--signal), var(--hot)) border-box;
   border-color: transparent;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-hover);
 }
 .job-toggle {
   all: unset;

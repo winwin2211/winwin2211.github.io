@@ -192,12 +192,16 @@ ul, ol { margin: 0; padding: 0; }
 .hero-copy .role    { --d: 420ms; }
 .hero-copy .where   { --d: 540ms; }
 .hero-copy .hero-actions { --d: 680ms; }
-.name { overflow: hidden; }
+/* each line is its own clip box, padded so Vietnamese marks are never cut */
 .name .line {
+  display: block; overflow: hidden;
+  padding: 0.06em 0 0.14em; margin-bottom: -0.14em;
+}
+.name .line > span {
   display: block;
   animation: unmask 900ms cubic-bezier(.2,.8,.2,1) both;
 }
-.name .line:nth-child(2) { animation-delay: 120ms; }
+.name .line:nth-child(2) > span { animation-delay: 120ms; }
 .hero-caption { animation: fade 1200ms ease both 1400ms; }
 
 @keyframes rise   { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -209,7 +213,7 @@ ul, ol { margin: 0; padding: 0; }
 }
 .name {
   font-size: clamp(3.2rem, 9.5vw, 7.25rem);
-  line-height: 0.92;
+  line-height: 1;
   font-weight: 700;
   letter-spacing: -0.035em;
   font-variation-settings: "opsz" 96;

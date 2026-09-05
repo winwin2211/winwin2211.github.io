@@ -1,4 +1,4 @@
-/* Trinh Van Thang — portfolio
+/* Trịnh Văn Thắng — portfolio
    Plain JS, no dependencies. Four small parts:
    1. theme toggle          2. timeline expand/collapse
    3. figures in view       4. the hero schematic (canvas)

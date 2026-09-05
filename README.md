@@ -1,4 +1,4 @@
-# Portfolio — Trinh Van Thang
+# Portfolio — Trịnh Văn Thắng
 
 A single static page, no build step, no dependencies. Open `index.html` in a
 browser or serve the folder with any static server.

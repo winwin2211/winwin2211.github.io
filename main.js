@@ -132,7 +132,7 @@
       { key: "src",   nodes: ["Ethereum", "Solana", "Base"] },
       { key: "bus",   nodes: ["NATS"] },
       { key: "work",  nodes: ["indexer", "enricher", "matcher"] },
-      { key: "store", nodes: ["PostgreSQL", "ClickHouse", "ScyllaDB", "OpenSearch"] },
+      { key: "store", nodes: ["TiDB", "MongoDB", "ScyllaDB", "ClickHouse", "OpenSearch", "PostgreSQL"] },
       { key: "api",   nodes: ["API"] },
       { key: "users", nodes: ["50K users"] },
     ];
@@ -142,11 +142,13 @@
       // bus → workers
       ["NATS", "indexer"], ["NATS", "enricher"], ["NATS", "matcher"],
       // workers → storage
-      ["indexer", "PostgreSQL"], ["indexer", "ScyllaDB"],
+      ["indexer", "TiDB"], ["indexer", "MongoDB"], ["indexer", "ScyllaDB"],
       ["enricher", "ClickHouse"], ["enricher", "OpenSearch"],
-      ["matcher", "PostgreSQL"], ["matcher", "ScyllaDB"],
+      ["matcher", "ScyllaDB"],
       // storage → api
-      ["PostgreSQL", "API"], ["ClickHouse", "API"], ["ScyllaDB", "API"], ["OpenSearch", "API"],
+      ["TiDB", "API"], ["MongoDB", "API"], ["ScyllaDB", "API"], ["ClickHouse", "API"], ["OpenSearch", "API"],
+      // api ↔ PostgreSQL: users, balances and money movements only
+      ["API", "PostgreSQL"],
       // api → users
       ["API", "50K users"],
     ];
@@ -324,6 +326,10 @@
         if (n.col === "src") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y - 14); }
         else if (big) { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + n.w / 2 + 8, n.y); }
         else if (n.col === "users") { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 20); }
+        else if (n.col === "store") {
+          const idx = columns.find((c) => c.key === "store").nodes.indexOf(n.label);
+          ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + (idx % 2 ? 28 : 16));
+        }
         else { ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 16); }
       } else if (n.col === "src") { ctx.textAlign = "right"; ctx.fillText(n.label, n.x - 12, n.y); }
       else if (n.col === "users") { ctx.textAlign = "left"; ctx.fillText(n.label, n.x + 16, n.y); }
